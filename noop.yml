@@ -1,4 +1,6 @@
 # This is a playbook that basically does nothing except prints out Ansible variables.
+# Much was stolen from https://gryzli.info/2017/12/21/ansible-debug-print-variables/
+
 - name: Do nothing much
   hosts: localhost
   tasks:
