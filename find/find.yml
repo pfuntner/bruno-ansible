@@ -1,0 +1,16 @@
+- name: "Playing with `find` module"
+  hosts: localhost
+  tasks:
+    - name: find
+      find:
+        file_type: directory
+        paths: /tmp
+        recurse: yes
+        depth: 0
+      register: find_dirs
+
+    - name: dump
+      command:
+        "echo {{ item.path }}"
+      with_items: "{{ find_dirs.files }}"
+

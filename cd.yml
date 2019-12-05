@@ -1,0 +1,20 @@
+- name: Try to change directory
+  hosts: localhost
+  tasks:
+  - name: "pwd for /tmp"
+    command: pwd
+    register: tmp_output
+    args:
+      chdir: /tmp
+
+  - name: "dump /tmp command"
+    debug:
+      var: tmp_output
+
+  - name: "pwd for current dir"
+    command: pwd
+    register: curr_output
+
+  - name: "dump curr command"
+    debug:
+      var: curr_output

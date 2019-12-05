@@ -1,0 +1,7 @@
+  - name: handler1
+    command: 'true'
+    notify: handler2
+
+  - name: handler2
+    debug:
+      msg: "This is handler2!"

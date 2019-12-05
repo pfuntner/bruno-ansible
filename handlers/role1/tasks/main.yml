@@ -1,0 +1,4 @@
+  - name: Task 1
+    command: 'true'
+    notify:
+      - handler1

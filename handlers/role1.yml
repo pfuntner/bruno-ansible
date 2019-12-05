@@ -1,0 +1,4 @@
+  - name: Invoke role1
+    hosts: localhost
+    roles:
+      - role1

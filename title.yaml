@@ -1,0 +1,7 @@
+- name: Using variable in task name
+  hosts: localhost
+  tasks:
+    - name: "What is {{ x }}"
+      command: "true"
+  vars:
+    x: foo
