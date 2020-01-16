@@ -1,0 +1,10 @@
+# Trying out loop items specified from the command line
+
+- name: Try out `loop` with a var
+  hosts: localhost
+  tasks:
+
+  - name: Looper
+    debug:
+      msg: "{{ item }}"
+    loop: "{{ items | default([]) }}"
