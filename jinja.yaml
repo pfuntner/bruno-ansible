@@ -1,0 +1,6 @@
+- name: Try out jinja expression in a string
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Show expression
+    debug:
+      msg: "CentOS >{{ 'True' if ansible_distribution == 'CentOS' else 'False' }}<"
