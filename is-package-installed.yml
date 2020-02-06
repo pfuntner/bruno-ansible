@@ -1,11 +1,76 @@
 # inspired by https://dev.to/setevoy/ansible-check-if-a-package-installed-on-a-remote-system-4402
 
+# Note: package_facts module requires that python-apt package must be installed on Debian-based (Debian, Ubuntu) targeted hosts that use apt instead of yum/dnf.
+
+# I had trouble with the package_facts module even when python-apt was installed but I was using Ansible 2.8.4.  I spun up a Debian 10 Docker instance , installed Ansible 2.9.4, and the playbook wouldn't even work until python-apt was installed:
+# 
+#   TASK [Gather the packager facts] ************************************************************************************************************************************************************************************************************
+#   [WARNING]: Found "apt" but Failed to import the required Python library (apt) on 627d6b0c60d0's Python /usr/bin/python. Please read module documentation and install in the appropriate location. If the required library is installed, but
+#   Ansible is using the wrong Python interpreter, please consult the documentation on ansible_python_interpreter
+#   
+#   fatal: [localhost]: FAILED! => {"changed": false, "msg": "Could not detect a supported package manager from the following list: ['portage', 'rpm', 'pkg', 'apt'], or the required Python library is not installed. Check warnings for details."}
+# 
+# When I installed python-apt, the package worked as expected and the playbook successfully discerned installed and uninstalled packages:
+# 
+#   root@627d6b0c60d0:/tmp# ansible-playbook is-package-installed.yml
+#   [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+#   
+#   
+#   PLAY [Check to see if a package is installed] ***********************************************************************************************************************************************************************************************
+#   
+#   TASK [Gathering Facts] **********************************************************************************************************************************************************************************************************************
+#   ok: [localhost]
+#   
+#   TASK [Gather the packager facts] ************************************************************************************************************************************************************************************************************
+#   ok: [localhost]
+#   
+#   TASK [Dump all packages] ********************************************************************************************************************************************************************************************************************
+#   skipping: [localhost]
+#   
+#   TASK [Package status] ***********************************************************************************************************************************************************************************************************************
+#   
+#   PLAY RECAP **********************************************************************************************************************************************************************************************************************************
+#   localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+#   
+#   root@627d6b0c60d0:/tmp# ansible-playbook -e '{ "pkgs": ["foo", "python-apt"] }' is-package-installed.yml
+#   [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+#   
+#   
+#   PLAY [Check to see if a package is installed] ***********************************************************************************************************************************************************************************************
+#   
+#   TASK [Gathering Facts] **********************************************************************************************************************************************************************************************************************
+#   ok: [localhost]
+#   
+#   TASK [Gather the packager facts] ************************************************************************************************************************************************************************************************************
+#   ok: [localhost]
+#   
+#   TASK [Dump all packages] ********************************************************************************************************************************************************************************************************************
+#   skipping: [localhost]
+#   
+#   TASK [Package status] ***********************************************************************************************************************************************************************************************************************
+#   ok: [localhost] => (item=foo) => {
+#       "msg": "localhost: foo not installed"
+#   }
+#   ok: [localhost] => (item=python-apt) => {
+#       "msg": "localhost: python-apt installed"
+#   }
+#   
+#   PLAY RECAP **********************************************************************************************************************************************************************************************************************************
+#   localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+#   
+#   root@627d6b0c60d0:/tmp#
+
 - name: Check to see if a package is installed
   hosts: "{{ hosts | default('localhost') }}"
   tasks:
 
   - name: Gather the packager facts
     package_facts:
+
+  - name: Dump all packages
+    debug:
+      var: ansible_facts.packages
+    when: dump_all | default(false)
 
   - name: Package status
     debug: 
