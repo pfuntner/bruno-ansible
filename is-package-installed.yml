@@ -9,5 +9,5 @@
 
   - name: Package status
     debug: 
-      msg: "{{ item }} {{ 'installed' if item in ansible_facts.packages else 'not installed' }}"
+      msg: "{{ inventory_hostname }}: {{ item }} {{ 'installed' if item in ansible_facts.packages else 'not installed' }}"
     loop: "{{ pkgs | default([]) }}"
