@@ -1,0 +1,21 @@
+- name: Testing nginx debug service
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - name: Check for nginx service
+    command: systemctl status nginx
+    failed_when: false
+    register: nginx_service_check
+
+  - name: Look at nginx_service_check
+    debug:
+      var: nginx_service_check
+
+  - name: Check for nginx debug service
+    command: systemctl status nginx-debug
+    failed_when: false
+    register: nginx_debug_service_check
+
+  - name: Look at nginx_debug_service_check
+    debug:
+      var: nginx_debug_service_check
