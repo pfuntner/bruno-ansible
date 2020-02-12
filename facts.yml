@@ -1,0 +1,6 @@
+- name: Dump Ansible facts
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Just the facts
+    debug:
+      var: ansible_facts
