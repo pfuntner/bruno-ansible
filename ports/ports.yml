@@ -1,0 +1,40 @@
+- name: Test ports
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+    # Test output from `netstat -ltnp` such as `tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      914/systemd-resolve`
+    - name: Test IPv4 ports before creating rules
+      shell: "netstat -ltnp | awk '/^{{ item.protocol }}\\s.*:{{ item.destination_port }}\\s.*\\sLISTEN\\s.*\\/{{ item.program_name }}\\s*$/ { print $0 }'"
+      register: ipv4_ports
+      loop: "{{ iptables_rules + iptables_rules_os_version }}"
+      become: True
+
+    - name: Dump
+      debug:
+        var: ipv4_ports
+
+    - name: Verbage
+      debug:
+        msg: "Port {{ item.item.destination_port }} is {{ 'not in use' if item.stdout == '' else 'in use' }}"
+      loop: "{{ ipv4_ports.results }}"
+
+  vars:
+    iptables_rules:
+      # Enable SSH on port 22
+      - chain: INPUT
+        protocol: tcp
+        destination_port: 22
+        ctstate: NEW,ESTABLISHED
+        jump: ACCEPT
+        comment: "Allow tcp port 22"
+        program_name: sshd
+
+    iptables_rules_os_version:
+      # Enable systemd/resolve on port 5355
+      - chain: INPUT
+        protocol: tcp
+        destination_port: 5355
+        ctstate: NEW,ESTABLISHED
+        jump: ACCEPT
+        comment: "Allow systemd/resolve port 5355"
+        program_name: systemd-resolv

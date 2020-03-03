@@ -1,0 +1,11 @@
+- name: Playbook to mess with a role
+  hosts: localhost
+
+  roles:
+    - role: myrole
+
+    - role: myrole
+      vars:
+        var: "2"
+  vars:
+    var: "1"

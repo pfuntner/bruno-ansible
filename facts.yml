@@ -4,3 +4,7 @@
   - name: Just the facts
     debug:
       var: ansible_facts
+
+  - name: Python interpreter
+    debug:
+      msg: "{{ ansible_facts.hostname }}'s Python interpreter is {{ ansible_facts.python['executable'] }}"
