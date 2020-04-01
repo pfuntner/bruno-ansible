@@ -1,0 +1,13 @@
+- name: Display distro information
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Print detected system information
+    debug:
+      msg:
+          - "Ansible Ver: {{ ansible_version.full }}"
+          - "Distro: {{ ansible_distribution }}"
+          - "OS Family: {{ ansible_os_family }}"
+          - "Version: {{ ansible_distribution_version }}"
+          - "Major Ver: {{ ansible_distribution_major_version }}"
+          - "Package mgr: {{ ansible_pkg_mgr }}"
+          - "Service mgr: {{ ansible_service_mgr }}"
