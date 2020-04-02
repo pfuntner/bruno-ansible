@@ -4,9 +4,9 @@
   - name: Print detected system information
     debug:
       msg:
-          - "ansible_version.full: {{ ansible_version.full }}"
-          - "ansible_distribution: {{ ansible_distribution }}"
           - "ansible_os_family: {{ ansible_os_family }}"
+          - "ansible_distribution: {{ ansible_distribution }}"
+          - "ansible_version.full: {{ ansible_version.full }}"
           - "ansible_distribution_version: {{ ansible_distribution_version }}"
           - "ansible_distribution_major_version: {{ ansible_distribution_major_version }}"
           - "ansible_pkg_mgr: {{ ansible_pkg_mgr }}"
