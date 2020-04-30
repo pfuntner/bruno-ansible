@@ -1,0 +1,22 @@
+- name: "Install xorg-x11-docs, remove xorg-x11-*, remove xorg-x11-*"
+  hosts: "{{ hosts }}"
+  become: true
+  tasks:
+    - name: Ensure X Window System is installed
+      package:
+        name: "xorg-x11-docs"
+        state: present
+
+    - name: Remove 1 - will succeed on both RHEL7 and RHEL8 and remove package the previous task installed
+      package:
+        name: "xorg-x11-*"
+        state: absent
+
+    - name: Remove 2 - will fail on RHEL8
+      package:
+        name: "xorg-x11-*"
+        state: absent
+      register: remove_status
+      failed_when:
+        - remove_status is failed
+        - "not 'xorg-x11-* - no package matched' in remove_status.failures"
