@@ -1,0 +1,13 @@
+- name: "Vars across long message"
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - name: "Print"
+    debug:
+      msg: |
+        one: {{ one }}
+        two: {{ two }}
+
+  vars:
+    one: 1
+    two: 2

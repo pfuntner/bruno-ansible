@@ -1,0 +1,7 @@
+- name: "Playbook name"
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - name: "Task name"
+    debug:
+      msg: "Basic debug task"

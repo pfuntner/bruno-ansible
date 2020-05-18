@@ -1,0 +1,36 @@
+- name: "Check for packages"
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - name: Set command for Redhat
+    set_fact:
+      installed_package_cmd: "rpm -qa --qf '%{NAME}\n'"
+      cron_package_name: "cronie"
+    when:
+      ansible_os_family == 'RedHat'
+      
+  - name: Set command for Debian
+    set_fact:
+      installed_package_cmd: "dpkg-query -f '${binary:Package}\n' -W"
+      cron_package_name: "cron"
+    when:
+      ansible_os_family == 'Debian'
+      
+  - name: Set command for Alpine
+    set_fact:
+      installed_package_cmd: "apk info"
+      cron_package_name: "cronie"
+    when:
+      ansible_os_family == 'Alpine'
+
+  - name: Gather packages
+    command: "{{ installed_package_cmd }}"
+    register: commands
+
+  - name: Dump commands
+    debug:
+      var: commands
+
+  - name: Test for cron
+    debug:
+      msg: "cron is {{ 'available' if cron_package_name in commands.stdout_lines else 'not available' }}"
