@@ -1,0 +1,21 @@
+- name: Test using an Ansible variable inside of an awk script
+  hosts: localhost
+  vars:
+    foo: Hello, World
+  tasks:
+    - name: awk
+      command: >
+        awk '
+          BEGIN { print ">>{{ foo }}>>" }
+          END { print "<<{{ foo }}<<" }
+        '
+      register: awk_command
+
+    - name: Dump
+      debug:
+        var: awk_command
+
+    - name: Unknown variable
+      debug:
+        msg: "This is a {{ test }}"
+      when: False
