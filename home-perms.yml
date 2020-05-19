@@ -1,0 +1,10 @@
+- name: Find non-restrictive home directories
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Find
+    command: find /home -mindepth 1 -maxdepth 1 -perm /004
+    register: find_command
+
+  - name: Dump
+    debug:
+      var: find_command.stdout_lines
