@@ -1,0 +1,16 @@
+- name: Get installed packages list
+  command: "{{ installed_package_cmd }}"
+  args:
+    warn: false
+  register: installed_packages
+  changed_when: false
+  tags: always
+
+- name: Display installed packages list
+  debug:
+    var: installed_packages.stdout_lines
+  when: loud | default(False)
+
+- name: Look for logrotate
+  debug:
+    msg: "logrotate is {{ '' if 'logrotate' in installed_packages.stdout_lines else 'not ' }}installed"
