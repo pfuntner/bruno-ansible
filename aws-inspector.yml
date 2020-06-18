@@ -1,0 +1,39 @@
+- name: Install AWS Inspector
+  hosts: "{{ hosts }}"
+
+  pre_tasks:
+    - name: Check if inside AWS
+      uri:
+        url: http://169.254.169.254/latest/meta-data
+        timeout: 2
+      register: aws_uri_check
+      failed_when: False
+  
+    - set_fact:
+        is_aws_environment: "{{ aws_uri_check.status == 200 }}"
+
+  tasks:
+    - block:
+      - name: Get installation package
+        get_url:
+          url: "https://inspector-agent.amazonaws.com/linux/latest/install"
+          dest: "{{ filename }}"
+          mode: "755"
+        notify: Remove install package
+    
+      - name: Install AWS Inspector
+        command: "{{ filename }}"
+        become: true
+
+      when: is_aws_environment
+
+  force_handlers: true
+
+  handlers:
+    - name: Remove install package
+      file:
+        path: "{{ filename }}"
+        state: absent
+
+  vars:
+    filename: /tmp/aws-inspector.sh
