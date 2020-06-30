@@ -1,0 +1,11 @@
+# I was pretty sure that ansible-playbook accepted multiple -e options but I wanted to make sure.
+
+- name: "Try: `ansible-playbook -e foo=1 -e bar=2 vars.yml`"
+  hosts: localhost
+  tasks:
+  - debug:
+      msg: "foo={{ foo }}, bar={{ bar }}"
+
+  vars:
+    foo: FOO
+    bar: BAR
