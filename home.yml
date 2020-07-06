@@ -1,0 +1,10 @@
+- name: Play with home directory
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Get home directory
+    command: pwd
+    register: pwd
+
+  - name: Display
+    debug:
+      var: pwd.stdout
