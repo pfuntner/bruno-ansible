@@ -7,11 +7,27 @@
 - name: "Perform 'kubectl get nodes'"
   hosts: "{{ hosts | default('master0') }}"
   tasks:
+
   - name: "Set `dir` variable"
     set_fact:
-      dir: "{{ lookup('env', 'HOME') }}/.kube"
+      home: "{{ lookup('env', 'HOME') }}"
 
-  # - name: Ensure ~/.kube exists
-  #   stat:
-  #     path: ~/.kube
-  #     state: directory
+  - name: Ensure ~/.kube exists
+    file:
+      path: "{{ home }}/.kube"
+      state: directory
+
+  - name: Copy admin.conf
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: "{{ home }}/.kube/config"
+      mode: "0644"
+    become: true
+
+  - name: kubectl
+    command: kubectl get nodes
+    register: kubectl
+
+  - name: Output
+    debug:
+      var: kubectl.stdout_lines
