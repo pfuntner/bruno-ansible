@@ -1,0 +1,17 @@
+# cd ~
+# mkdir .kube
+# sudo cp /etc/kubernetes/admin.conf .kube/config
+# sudo chmod 644 .kube/config
+# kubectl get nodes
+
+- name: "Perform 'kubectl get nodes'"
+  hosts: "{{ hosts | default('master0') }}"
+  tasks:
+  - name: "Set `dir` variable"
+    set_fact:
+      dir: "{{ lookup('env', 'HOME') }}/.kube"
+
+  # - name: Ensure ~/.kube exists
+  #   stat:
+  #     path: ~/.kube
+  #     state: directory
