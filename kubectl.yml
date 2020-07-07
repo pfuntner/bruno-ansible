@@ -23,7 +23,7 @@
       src: /etc/kubernetes/admin.conf
       dest: "{{ home }}/.kube/config"
       mode: "0644"
-      user: "{{ ansible_user }}"
+      owner: "{{ ansible_user }}"
     become: true
 
   - name: kubectl
