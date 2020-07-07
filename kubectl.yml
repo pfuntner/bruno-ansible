@@ -19,6 +19,7 @@
 
   - name: Copy admin.conf
     copy:
+      remote_src: true
       src: /etc/kubernetes/admin.conf
       dest: "{{ home }}/.kube/config"
       mode: "0644"
