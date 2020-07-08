@@ -2,9 +2,13 @@
   hosts: "{{ hosts | default('localhost') }}"
   tasks:
   - name: Get home directory
-    command: pwd
-    register: pwd
+    shell: "echo $HOME"
+    register: home_directory
+
+  - name: Set home variable
+    set_fact:
+      home: "{{ home_directory.stdout_lines[0] }}"
 
   - name: Display
     debug:
-      var: pwd.stdout
+      var: home
