@@ -1,0 +1,17 @@
+- name: "Investigating triggering handlers via their name vs `listen`"
+  hosts: localhost
+
+  tasks:
+    - name: Bogus
+      command: "true"
+      notify: my_handler
+
+  handlers:
+    - name: my_handler
+      debug: 
+        msg:  is my_handler
+   
+    - name: my_handler2
+      debug: 
+        msg:  is my_handler2
+      listen: my_handler
