@@ -1,0 +1,13 @@
+- name: Try service_facts module
+  hosts: "{{ hosts | default('localhost') }}"
+  # gather_facts: false
+  tasks:
+
+  - debug:
+      var: ansible_facts
+
+  - name: Gather service facts
+    service_facts:
+
+  - debug:
+      var: ansible_facts

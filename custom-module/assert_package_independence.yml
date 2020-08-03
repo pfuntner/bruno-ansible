@@ -1,0 +1,14 @@
+- name: Try out custom module
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Assert iptables does not depend on ufw or nftables
+    assert_package_independence:
+      package: iptables
+      other_packages:
+        - ufw
+        - nftables
+        - netbase
+    register: output
+  
+  - debug:
+      var: output

@@ -1,0 +1,13 @@
+- name: Try custom module
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Run custom module
+    my_module:
+      command: hostname
+    become: yes
+    become_user: root
+    become_method: sudo
+    register: output
+
+  - debug:
+      var: output
