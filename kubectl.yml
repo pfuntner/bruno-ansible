@@ -8,9 +8,13 @@
   hosts: "{{ hosts | default('master0') }}"
   tasks:
 
+  - name: "Get $HOME"
+    shell: "echo $HOME"
+    register: home
+
   - name: "Set `dir` variable"
     set_fact:
-      home: "{{ lookup('env', 'HOME') }}"
+      home: home.stdout_lines[0]
 
   - name: Ensure ~/.kube exists
     file:
