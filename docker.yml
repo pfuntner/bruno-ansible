@@ -1,0 +1,35 @@
+# To run inside the Docker container named `ubuntu`:
+#
+#   ansible-playbook --extra-vars hosts=all --inventory ubuntu, --connection docker docker.yml
+#
+# From: https://blog.oddbit.com/post/2015-10-13-ansible-20-the-docker-connection-driver/
+
+- name: Test for Docker
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - debug:
+      var: ansible_connection
+
+  - name: Primary Docker check
+    set_fact:
+      running_in_docker: "{{ ansible_connection == 'docker' }}"
+
+  # Secondary Docker check block
+  - block:
+    - name: Secondary Docker check
+      shell: \
+        awk -F/ '$2 == "docker"' /proc/self/cgroup
+      register: secondary_docker_check
+
+    - name: Set running_in_docker
+      set_fact:
+        running_in_docker: true
+      when: 
+        - "'docker' in secondary_docker_check.stdout"
+
+    # end of Secondary Docker check block
+    when: running_in_docker == false
+
+  - debug:
+      var: running_in_docker
