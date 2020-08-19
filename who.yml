@@ -1,0 +1,8 @@
+- name: "Who are you?  Who who.  Who who."
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - command: id
+    register: output
+
+  - debug:
+      var: output

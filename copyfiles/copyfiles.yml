@@ -1,0 +1,13 @@
+- name: Copy arbitrary files
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - name: Copy files
+    copy:
+      src: "{{ item }}"
+      dest: "{{ dst_dir }}"
+    with_fileglob: "{{ src_dir }}/*"
+
+  vars:
+    src_dir: "files/"
+    dst_dir: "/tmp"
