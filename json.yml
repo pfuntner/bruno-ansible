@@ -1,0 +1,31 @@
+- name: Try out reading JSON in Ansible
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Make file
+    shell: |
+      echo '{"summary" : {"successes": 100, "failures": 1} }' > {{ path }}
+    notify: Remove file
+
+  - name: Read JSON
+    set_fact:
+      results: "{{ lookup('file', '{{ path }}') | from_json }}"
+
+  - name: Display summary of results
+    debug:
+      var: results['summary']
+
+  - name: Validate no failures
+    fail:
+      msg: There are failures
+    when:
+      results['summary']['failures']|default(0) != 0
+
+  force_handlers: true
+  handlers:
+  - name: Remove file
+    file:
+      path: "{{ path }}"
+      state: absent
+
+  vars:
+    path: /tmp/foo.json
