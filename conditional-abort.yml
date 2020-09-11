@@ -1,0 +1,9 @@
+- name: Conditionally fail based on the exit status of a command
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+
+  - name: Execute command
+    shell: "{{ command | default('true') }}"
+    register: command_status
+    failed_when: command_status.failed == true and abort_on_failure == true
+    # ignore_errors: "{{ not(abort_on_failure|default(false)|bool) == true }}"
