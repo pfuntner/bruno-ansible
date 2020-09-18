@@ -1,0 +1,30 @@
+# I had a need to do nested loops and found this https://docs.ansible.com/ansible/2.3/playbooks_loops.html#nested-loops that inspired me to create this playbook 
+
+- name: Nested loop
+  hosts: localhost
+  tasks:
+
+    - name: Echos
+      shell: "echo 'file:{{ item[0] }} regexp:{{ item[1] }} line:{{ item[2] }}'"
+      with_nested:
+        - "{{ files }}"
+        - "{{ updates }}"
+      register: echos
+
+    - debug:
+        # var: echos['results']['stdout_lines']
+        msg: 
+         - "{{ echos['results'][0]['stdout_lines'][0] }}"
+         - "{{ echos['results'][1]['stdout_lines'][0] }}"
+         - "{{ echos['results'][2]['stdout_lines'][0] }}"
+         - "{{ echos['results'][3]['stdout_lines'][0] }}"
+
+  vars:
+    files:
+      - /tmp/file1
+      - /tmp/file2
+    updates: 
+      - - regexp1
+        - line1
+      - - regexp2
+        - line2
