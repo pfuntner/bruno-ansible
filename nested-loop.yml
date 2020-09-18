@@ -5,7 +5,10 @@
   tasks:
 
     - name: Echos
-      shell: "echo 'file:{{ item[0] }} regexp:{{ item[1] }} line:{{ item[2] }}'"
+      shell: \
+        echo "file:{{ item[0]['file'] }} regexp:{{ item[1]['regexp'] }} line:{{ item[1]['line'] }}"
+    # - debug:
+    #     var: item
       with_nested:
         - "{{ files }}"
         - "{{ updates }}"
@@ -21,10 +24,10 @@
 
   vars:
     files:
-      - /tmp/file1
-      - /tmp/file2
+      - file: /tmp/file1
+      - file: /tmp/file2
     updates: 
-      - - regexp1
-        - line1
-      - - regexp2
-        - line2
+      - regexp: regexp1
+        line: line1
+      - regexp: regexp2
+        line: line2
