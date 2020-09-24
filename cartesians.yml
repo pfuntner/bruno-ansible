@@ -1,0 +1,27 @@
+- name: Play with cartesian products
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Cleanup
+      file:
+        path: cartesian.txt
+        state: absent
+
+    - name: Apply
+      # lineinfile:
+      #   path: cartesian.txt
+      #   line: "{{ item.0 + '-' + item.1 }}" # + '-' + item.2 }}"
+      debug:
+        var: item
+      loop: "{{ items1 | product(items2, items3) | list }}"
+
+  vars:
+    items1:
+      - item1.1
+      - item1.2
+    items2:
+      - item2.1
+      - item2.2
+    items3:
+      - item3.1
+      - item3.2
