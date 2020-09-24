@@ -1,0 +1,29 @@
+# After I came up with nested-loops.yml using `with_nested`, I learned that it can be replaced with `loop` and the `product` filter.
+
+- name: Nested loop
+  gather_facts: false
+  hosts: localhost
+  tasks:
+
+    - name: Echos
+      shell: \
+        echo "file:{{ item.0['file'] }} regexp:{{ item.1['regexp'] }} line:{{ item.1['line'] }}"
+      loop: "{{ files | product(updates) | list }}"
+      register: echos
+
+    - debug:
+        msg: 
+         - "{{ echos['results'][0]['stdout_lines'][0] }}"
+         - "{{ echos['results'][1]['stdout_lines'][0] }}"
+         - "{{ echos['results'][2]['stdout_lines'][0] }}"
+         - "{{ echos['results'][3]['stdout_lines'][0] }}"
+
+  vars:
+    files:
+      - file: /tmp/file1
+      - file: /tmp/file2
+    updates: 
+      - regexp: regexp1
+        line: line1
+      - regexp: regexp2
+        line: line2
