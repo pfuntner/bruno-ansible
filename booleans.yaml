@@ -1,0 +1,11 @@
+- name: Test variables sent through command line
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: Test variables
+    debug:
+      msg: [
+        "var1 is {{ 'true' if var1 == true else 'false' }}",
+        "var2 is {{ 'true' if var2 == true else 'false' }}",
+        "var2 is {{ 'true' if var2|bool == true else 'false' }}"
+      ]

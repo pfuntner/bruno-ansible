@@ -1,0 +1,14 @@
+- name: Demonstrating the power of nested loops
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: Generate
+    debug:
+      msg: "{{ item.0.0 + item.1.0 + item.2.0 + item.3.0 + item.4.0 }}"
+    loop: "{{ digits | product(digits, digits, digits, digits) | list }}"
+
+  vars:
+    digits:
+      - "0"
+      - "1"
