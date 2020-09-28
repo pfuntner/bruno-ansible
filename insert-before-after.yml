@@ -1,0 +1,28 @@
+- name: "Try lineinfile insertafter and insertbefore actions - A failed attempt but a good example"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: Prepare
+    shell: \
+      echo -e "one\ntwo\nthree\nfour" > {{ item }}
+    loop: "{{ paths }}"
+
+  - name: Update
+    lineinfile:
+      path: "{{ item.0 }}"
+      line: "{{ item.1.line }}"
+
+      # The lineinfile module screams bloody murder when both parameters are specified even if they're the default.
+      insertafter: "{{ item.1.insertafter | default(false) }}"
+      insertbefore: "{{ item.1.insertbefore | default(false) }}"
+
+    loop: "{{ paths | product(rules) | list }}"
+
+  vars:
+    paths: 
+      - insert-before-after.txt
+    rules:
+      - { line: "foo", insertbefore: "one" }
+      - { line: "bar", insertafter: "one" }
+      - { line: "new" }
