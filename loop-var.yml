@@ -2,9 +2,18 @@
 
 - name: Try out `loop` with a var
   hosts: localhost
+  gather_facts: false
   tasks:
+
+  - name: Before
+    debug:
+      msg: Before the loop
 
   - name: Looper
     debug:
       msg: "{{ item }}"
     loop: "{{ items | default([]) }}"
+
+  - name: After
+    debug:
+      msg: After the loop
