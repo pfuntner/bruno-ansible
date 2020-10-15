@@ -1,0 +1,27 @@
+- name: Test adding to and removing from lists
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - debug:
+      msg:
+        - master: "{{ master_list }}"
+        - subtraction: "{{ subtraction_list }}"
+        - addition: "{{ addition_list }}"
+        - result1: "{{ master_list | difference(subtraction_list) }}"
+        - result2: "{{ master_list | difference(subtraction_list) + addition_list }}"
+
+  vars:
+    master_list:
+      - a
+      - b
+      - c
+    subtraction_list:
+      - b
+      - j
+      - x
+    addition_list:
+      - l
+      - m
+      - x
+      - y
+      - z
