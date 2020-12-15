@@ -1,0 +1,10 @@
+- name: Examine /etc/fstab
+  hosts: "{{ hosts | default('localhost') }}"
+  gather_facts: true
+  tasks:
+  - name: Collect /etc/fstab
+    command: cat /etc/fstab
+    register: cat_fstab
+
+  - debug:
+      var: cat_fstab.stdout_lines
