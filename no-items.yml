@@ -1,0 +1,16 @@
+- name: Test a loop with no items
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Before
+    debug:
+      msg: Before loop
+
+  - name: Loop
+    debug:
+      var: item
+    loop: "{{ items | default([]) }}"
+
+  - name: After
+    debug:
+      msg: After loop
+
