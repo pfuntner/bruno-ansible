@@ -7,21 +7,19 @@
     args:
       warn: false
     changed_when: false
-    register: mount_results
-
-  - name: Dump mount_results 1
-    debug:
-      var: mount_results
+    register: tmp_fstab_results
 
   - name: Find current mount point for /tmp via mount
     shell: mount | awk -F ' ' '($3 == "/tmp") {print $3 "," $1 "," $5}'
     args:
       warn: false
     changed_when: false
-    register: "{{ 'mount_results' if mount_results.stdout|default('')=='' else 'foo' }}"
-    when:
-      - mount_results.stdout|default("")==""
+    register: tmp_mount_results
 
-  - name: Dump mount_results 2
+  - name: Determine mount information
+    set_fact:
+      tmp_mount: "{{ (tmp_fstab_results.stdout_lines|default('')) | ternary(tmp_fstab_results.stdout_lines, tmp_mount_results.stdout_lines|default('')) }}"
+
+  - name: Dump
     debug:
-      var: mount_results
+      var: tmp_mount

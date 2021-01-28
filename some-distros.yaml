@@ -1,0 +1,7 @@
+- name: Select some distros
+  hosts: "{{ hosts }}"
+  tasks:
+  - name: Hello, World.
+    debug:
+      msg: "Hello, {{ ansible_distribution }}!"
+    when: ansible_distribution in ['Debian', 'Ubuntu', 'CentOS']
