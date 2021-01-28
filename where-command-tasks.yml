@@ -7,32 +7,11 @@
   debug:
     msg: "{{ item }}: {{ which_task }}"
 
-- name: Redhat steps
-  block:
-  - name: Locate package (RedHat)
-    command: "rpm -q --whatprovides {{ which_task.stdout }}"
-    register: redhat_which_task
-    failed_when: false
+- name: Locate package 
+  command: "{{ locate_command }} {{ which_task.stdout }}"
+  register: locate_task
+  failed_when: false
 
-  - name: Display package (RedHat)
-    debug:
-      msg: "{{ which_task.stdout }}: {{ redhat_which_task }}"
-
-  when:
-    - which_task.stdout != ""
-    - ansible_os_family == "RedHat"
-
-- name: Debian steps
-  block:
-  - name: Locate package (Debian)
-    command: "apt-file search {{ which_task.stdout }}"
-    register: debian_which_task
-    failed_when: false
-
-  - name: Display package (Debian)
-    debug:
-      msg: "{{ which_task.stdout }}: {{ debian_which_task }}"
-
-  when:
-    - which_task.stdout != ""
-    - ansible_os_family == "Debian"
+- name: Display package 
+  debug:
+    msg: "{{ which_task.stdout }}: {{ locate_task }}"

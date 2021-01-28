@@ -4,3 +4,6 @@
     - name: Process a command
       include_tasks: where-command-tasks.yml
       loop: "{{ commands }}"
+
+  vars:
+    locate_command: "{{ 'apt-file search' if ansible_os_family == 'Debian' else 'rpm -q --whatprovides' }}"
