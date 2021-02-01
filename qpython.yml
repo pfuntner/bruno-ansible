@@ -1,0 +1,10 @@
+- name: Identify Python interpreter
+  hosts: "{{ hosts | default('localhost') }}"
+  tasks:
+  - name: Get Python version
+    command: "{{ discovered_interpreter_python | default('/usr/bin/python') }} --version"
+    register: get_version
+
+  - name: Display Python version
+    debug:
+      msg: "{{ discovered_interpreter_python | default('/usr/bin/python') }} is {{ get_version.stdout }}{{ get_version.stderr }}"
