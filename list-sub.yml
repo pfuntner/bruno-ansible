@@ -1,0 +1,36 @@
+# test performing substitution in strings of a list
+
+- name: Test substitution in list of strings
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: Before substitution
+    debug:
+      var: files1
+
+  # This was my first attempt and it worked but the list had to have exactly two elements
+  #
+  # - name: Replace
+  #   set_fact:
+  #     files1:
+  #       - "{{ files1[0] | regex_replace('^/etc/pam.d/', root + '/') }}"
+  #       - "{{ files1[1] | regex_replace('^/etc/pam.d/', root + '/') }}"
+
+  - name: Replace
+    set_fact:
+      files2: "{{ files2 + [ item | regex_replace('^/etc/pam.d/', root + '/') ] }}"
+    loop: "{{ files1 }}"
+
+  - name: After substitution
+    debug:
+      var: files2
+
+  vars:
+    root: "/usr/share/authselect/default/sssd/password-auth"
+
+    files1:
+      - "/etc/pam.d/password-auth"
+      - "/etc/pam.d/system-auth"
+
+    files2: []
