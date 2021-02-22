@@ -1,0 +1,30 @@
+- name: Setting variables based on key/value pairs in dict
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Before
+      debug:
+        msg:
+          etc_pamd_root: "{{ etc_pamd_root | default('not set') }}"
+          etc_pamd_files: "{{ etc_pamd_root | default('not set') }}"
+
+    - name: dict2items
+      debug:
+        msg: "{{ path_vars | dict2items }}"
+
+    - name: Copy
+      set_fact:
+        "{{ item.key }}": "{{ item.value }}"
+      loop: "{{ path_vars | dict2items }}"
+
+    - name: After
+      debug:
+        msg:
+          etc_pamd_root: "{{ etc_pamd_root | default('not set') }}"
+          etc_pamd_files: "{{ etc_pamd_files | default('not set') }}"
+  vars:
+    path_vars:
+      etc_pamd_root: '/etc/pam.d'
+      etc_pamd_files:
+        - '/etc/pam.d/password-auth'
+        - '/etc/pam.d/system-auth'
