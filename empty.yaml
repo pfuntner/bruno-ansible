@@ -1,0 +1,4 @@
+- name: No tasks
+  hosts: localhost
+  gather_facts: false
+  tasks: []
