@@ -5,5 +5,11 @@
   hosts: localhost
   gather_facts: false
   tasks:
-  - debug:
+
+  - name: Is it defined?
+    debug:
       msg: "{{ 'var is ' + var if var is defined else 'var is not defined' }}"
+
+  - name: Provide a default
+    debug:
+      msg: "{{ 'value is ' + var | default('?') }}"
