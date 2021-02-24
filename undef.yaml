@@ -1,0 +1,9 @@
+# not defined: ansible-playbook undef.yaml
+# defined: ansible-playbook -e var=foo undef.yaml
+
+- name: Work with undefined variables
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - debug:
+      msg: "{{ 'var is ' + var if var is defined else 'var is not defined' }}"
