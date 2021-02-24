@@ -1,0 +1,3 @@
+- name: Use variable
+  debug:
+    msg: "{{ 'Foo is ' + (foo|default('not defined')) | to_json }}"

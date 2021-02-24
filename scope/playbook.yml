@@ -1,0 +1,6 @@
+- name: Drive roles
+  hosts: localhost
+  gather_facts: false
+  roles:
+  - role: role1
+  - role: role2

@@ -1,0 +1,12 @@
+- name: Display variable
+  debug:
+    msg: "define_foo is {{ define_foo if define_foo is defined else 'not defined' }}"
+
+- name: Set variable
+  set_fact:
+    foo:
+      first: Bruno
+      last: Redneck
+      employed: false
+  when:
+    - define_foo | default(true) == true
