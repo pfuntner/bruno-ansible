@@ -18,11 +18,12 @@
     rpm_key:
       key: "{{ item }}"
       state: present
+      validate_certs: no
     register: kubernetes_rpm_key
     with_items: "{{ kubernetes_yum_gpg_key }}"
   
   - name: Make cache if Kubernetes GPG key changed.
-    command: "yum -q makecache -y --disablerepo='*' --enablerepo='kubernetes'"
+    command: "yum -q makecache -y --disablerepo='*' --enablerepo='kubernetes' {{ no_check_option }}"
     when: kubernetes_rpm_key is changed
     args:
       warn: false
@@ -35,3 +36,5 @@
     kubernetes_yum_gpg_key:
       - https://packages.cloud.google.com/yum/doc/yum-key.gpg
       - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+    no_check_option: "{{ '--nogpgcheck' if no_check | default(false) == true else '' }}"
