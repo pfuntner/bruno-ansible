@@ -1,0 +1,36 @@
+- name: Extract subexpressions using regular expressions
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Extract variables
+      set_fact:
+        current_profile: "{{ current_output | join('\n') | regex_findall('^Profile ID: (\\S+)', multiline=True) | join }}"
+        current_features: "{{ current_output | join('\n') | regex_findall('^-\\s+(\\S+)', multiline=True) }}"
+        valid_profile: "{{ 'Current configuration is valid.' in (check_output | join('\n')) }}"
+        current_profiles: "{{ list_output | join('\n') | regex_findall('^-\\s+(\\S+)', multiline=True) }}"
+
+    - name: Dump variables
+      debug:
+        msg:
+          current_profile: "{{ current_profile }}"
+          current_features: "{{ current_features }}"
+          valid_profile: "{{ valid_profile }}"
+          current_profiles: "{{ current_profiles }}"
+
+  vars:
+    check_output:
+      # - 'Current configuration is valid.'
+      - 'Current configuration is not valid. It was probably modified outside authselect.'
+
+    current_output:
+      # - 'Profile ID: custom/cis'
+      - 'Enabled features:'
+      - '- with-faillock'
+      - '- with-foo'
+
+    list_output:
+      - '- minimal        Local users only for minimal installations'
+      - '- nis            Enable NIS for system authentication'
+      - '- sssd           Enable SSSD for system authentication (also for local users only)'
+      - '- winbind        Enable winbind for system authentication'
+      - '- custom/cis     CIS-compliant profile based on sssd'

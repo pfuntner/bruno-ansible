@@ -1,0 +1,18 @@
+- name: Run a two or more tasks via handlers
+  hosts: "{{ hosts }}"
+
+  # gather_facts: false
+
+  tasks:
+  - name: Trigger handler
+    command: 'true'
+    notify: Trigger task 1
+
+  handlers:
+  - name: Trigger task 1
+    command: 'true'
+    notify: Trigger task 2
+
+  - name: Trigger task 2
+    debug:
+      msg: Trigger task 2

@@ -1,0 +1,6 @@
+- name: Testing a one-line dict
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - debug:
+      msg: "{{ { 'a': 1, 'z': 26 } }}"

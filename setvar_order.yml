@@ -1,0 +1,11 @@
+- name: Try to use a variable set previously in same set_fact
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Set
+    set_fact:
+      foo: bar
+      # var: "foo is `{{ foo }}`"
+
+  - debug:
+      var: var

@@ -1,0 +1,23 @@
+- name: Test authselect task
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Update PAM file locations for authselect if necessary
+    set_fact:
+      "{{ item.key }}": "{{ item.value }}"
+    # loop: "{{ (authselect_discovery | default({'path_vars': {}})).path_vars | dict2items }}"
+    loop: "{{ (authselect_discovery | default({}))['path_vars'] | default({}) | dict2items }}"
+    when:
+      - authselect_discovery is defined
+      - authselect_discovery.active == true
+
+  vars:
+    authselect_discovery:
+      # # {'skip_reason': u'Conditional result was False', 'skipped': True, 'changed': False}
+      # skip_reason: 'Conditional result was False'
+      # skipped: True
+      # changed: False
+
+      active: true
+      path_vars:
+        foo: bar

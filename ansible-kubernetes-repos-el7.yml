@@ -18,7 +18,7 @@
     rpm_key:
       key: "{{ item }}"
       state: present
-      validate_certs: no
+      # validate_certs: no
     register: kubernetes_rpm_key
     with_items: "{{ kubernetes_yum_gpg_key }}"
   

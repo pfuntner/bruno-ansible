@@ -1,0 +1,9 @@
+- name: Test a symbolic in task name
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: "Here be {{ task_name }}"
+    debug:
+      msg: "Hello from {{ task_name }}"
+  vars:
+    task_name: foo

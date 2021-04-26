@@ -1,0 +1,27 @@
+- name: Try lineinfile module with a symbolic link
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: Remove file
+    file: 
+      path: file.txt
+      state: absent
+
+  - name: Create real file
+    shell: "echo '1\n2\n3' > file.txt"
+
+  - name: Create symlink
+    file:
+      path: file.symlink
+      state: link
+      src: file.txt
+
+  - name: Update file
+    lineinfile:
+      path: "{{ target }}"
+      regexp: "^2"
+      line: "2 update"
+
+  vars:
+    target: file.txt

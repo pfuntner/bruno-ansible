@@ -1,0 +1,13 @@
+- name: Test number of lines of stdout
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Look for file
+    command: ls foofoofoofoo
+    register: look_for_file
+    failed_when: false
+
+  - name: Evaluation
+    debug:
+      msg: No file was found
+    when: look_for_file.stdout_lines | length == 0

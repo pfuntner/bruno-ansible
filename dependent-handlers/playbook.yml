@@ -1,0 +1,20 @@
+- name: Try dependent handlers
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Main test
+    debug:
+      msg: Hello, Ansible world
+    changed_when: true
+    notify: handler1
+
+  handlers:
+  - name: handler1
+    set_fact:
+      foo: bar
+    changed_when: true
+    notify: handler2
+
+  - name: handler2
+    debug:
+      msg: "foo is `{{ foo }}`"

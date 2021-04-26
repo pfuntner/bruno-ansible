@@ -1,0 +1,9 @@
+- name: Demonstrate how single/double quotes treat variable substitution and character escaping
+  hosts: localhost
+  tasks:
+  - debug:
+      msg:
+        - 'Single: {{ ansible_distribution }}'
+        - "Double: {{ ansible_distribution }}"
+        - 'Single: a\tb a\\tb'
+        - "Double: a\tb a\\tb"
