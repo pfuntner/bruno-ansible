@@ -1,0 +1,5 @@
+- name: Task 1
+  debug:
+    msg:
+      - "in_defaults: {{ in_defaults }}"
+      - "in_vars: {{ in_vars }}"

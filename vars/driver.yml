@@ -1,0 +1,11 @@
+- name: Drive vars test
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - include_role: 
+      name: my_role
+
+    vars:
+      in_defaults: from task
+      in_vars: from task
