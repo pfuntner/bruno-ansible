@@ -1,0 +1,36 @@
+- name: Mess with mount options
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: fmask is not present
+    debug:
+      msg:
+        regexp1: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',?fmask=[0-7]?[0-7][0-7][0-7],?') }}"
+        regexp2: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',fmask=[0-7]?[0-7][0-7][0-7]') | regex_replace('fmask=[0-7]?[0-7][0-7][0-7],') }}"
+    vars:
+      line: 'UUID=2DD0-F016 /boot/efi vfat defaults,uid=0,gid=0,umask=077,shortname=winnt'
+
+  - name: fmask is at the beginning
+    debug:
+      msg:
+        regexp1: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',?fmask=[0-7]?[0-7][0-7][0-7],?') }}"
+        regexp2: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',fmask=[0-7]?[0-7][0-7][0-7]') | regex_replace('fmask=[0-7]?[0-7][0-7][0-7],') }}"
+    vars:
+      line: 'UUID=2DD0-F016 /boot/efi vfat fmask=000,defaults,uid=0,gid=0,umask=077,shortname=winnt'
+
+  - name: fmask is at the end
+    debug:
+      msg:
+        regexp1: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',?fmask=[0-7]?[0-7][0-7][0-7],?') }}"
+        regexp2: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',fmask=[0-7]?[0-7][0-7][0-7]') | regex_replace('fmask=[0-7]?[0-7][0-7][0-7],') }}"
+    vars:
+      line: 'UUID=2DD0-F016 /boot/efi vfat defaults,uid=0,gid=0,umask=077,shortname=winnt,fmask=000'
+
+  - name: fmask is in the middle
+    debug:
+      msg:
+        regexp1: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',?fmask=[0-7]?[0-7][0-7][0-7],?') }}"
+        regexp2: "{{ line }} => {{ line.split(' ')[3] | regex_replace(',fmask=[0-7]?[0-7][0-7][0-7]') | regex_replace('fmask=[0-7]?[0-7][0-7][0-7],') }}"
+    vars:
+      line: 'UUID=2DD0-F016 /boot/efi vfat defaults,fmask=000,uid=0,gid=0,umask=077,shortname=winnt'
