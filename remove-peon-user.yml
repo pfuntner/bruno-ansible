@@ -1,0 +1,21 @@
+- name: "Remove {{ peon_user }} user"
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - name: Escalated tasks
+    become: true
+    block:
+    - name: Remove user from /etc/sudoers
+      lineinfile:
+        path: /etc/sudoers
+        regexp: "{{ peon_user }}"
+        state: absent
+  
+    - name: Remove user
+      user:
+        name: "{{ peon_user }}"
+        state: absent
+        remove: true
+
+  vars:
+    peon_user: peon

@@ -1,0 +1,62 @@
+- name: "Create {{ peon_user }} user w/ ssh key and sudo auth (password required)"
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - name: "See if {{ peon_user }} already exists"
+    command: "id {{ peon_user }}"
+    failed_when: false
+    register: id_peon
+
+  - name: "Ensure {{ peon_user }} does not already exist"
+    fail: "{{ peon_user }} already exists"
+    when: id_peon.stdout | default('') != ''
+
+  # This must be run unprivileged so get the right directory
+  - name: "Set unprivileged_home: {{ ansible_user_dir }}"
+    set_fact:
+      unprivileged_home: "{{ ansible_user_dir }}"
+    become: false
+
+  - name: Escalated tasks
+    become: true
+    block:
+    - name: Create user
+      user:
+        name: "{{ peon_user }}"
+        shell: "{{ bash_executable }}"
+        password: "{{ peon_user | password_hash('sha512') }}" # https://www.lisenet.com/2019/ansible-generate-crypted-passwords-for-the-user-module/
+  
+    - name: Add user to /etc/sudoers
+      lineinfile:
+        path: /etc/sudoers
+        regexp: "{{ peon_user }}"
+        line: "{{ peon_user }}	ALL=(ALL)	ALL"
+  
+    - name: "Get {{ peon_user }}'s home directory"
+      shell: "echo ~{{ peon_user }}"
+      register: peon_home_command
+  
+    - name: Set peon_home variable
+      set_fact:
+        peon_home: "{{ peon_home_command.stdout }}"
+    
+    - name: "Create {{ peon_home }}/.ssh"
+      file:
+        path: "{{ peon_home }}/.ssh"
+        state: directory
+        mode: 0700
+        owner: "{{ peon_user }}"
+        group: "{{ peon_user }}"
+  
+    - name: "Copy {{ unprivileged_home }}/.ssh/authorized_keys to {{ peon_home }}/.ssh/authorized_keys"
+      copy:
+        src: "{{ unprivileged_home }}/.ssh/authorized_keys"
+        dest: "{{ peon_home }}/.ssh/authorized_keys"
+        remote_src: yes
+        mode: 0600
+        owner: "{{ peon_user }}"
+        group: "{{ peon_user }}"
+
+  vars:
+    peon_user: peon
+    bash_executable: /bin/bash
