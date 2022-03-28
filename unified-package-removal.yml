@@ -1,0 +1,43 @@
+# I was facing a task with trying to use the `package` module in places where a package manager module such as `apt` was used instead because another package manager module such as `dnf` didn't support an option that `apt` does.
+
+# Here are some fragments of the old method that made use of `package` everywhere except Debian and then used `apt` specifically for Debian:
+#
+# main.yml:        - name: Remove other firewall packages (Non-Debian)
+# main.yml-          package:
+# main.yml-            name: "{{ item }}"
+# main.yml-            state: absent
+# main.yml-          loop: "{{ unsupported_firewall_packages }}"
+# main.yml-          when:
+# main.yml-              - unsupported_firewall_packages != []
+# main.yml-              - remove_unsupported_firewall_packages == true
+# main.yml-              - ansible_os_family != "Debian"
+# main.yml-
+# main.yml:        - name: Remove other firewall packages (Debian family)
+# main.yml-          apt:
+# main.yml-            name: "{{ item }}"
+# main.yml-            state: absent
+# main.yml-            purge: yes
+# main.yml-          loop: "{{ unsupported_firewall_packages }}"
+# main.yml-          when:
+# main.yml-            - unsupported_firewall_packages != []
+# main.yml-            - remove_unsupported_firewall_packages == true
+# main.yml-            - ansible_os_family == "Debian"
+# main.yml-
+# 
+# redhat-7-family.yml:unsupported_firewall_packages:
+# redhat-7-family.yml-  - nftables
+
+# Here's a new method making use of the `omit` filter when the option shouldn't be passed to the `dnf`.
+- name: Try doing package removal with a single unified package task
+  hosts: "{{ hosts }}"
+  tasks:
+  - name: Remove other firewall packages
+    package:
+      name: "{{ item }}"
+      state: absent
+      purge: "{{ 'yes' if ansible_os_family == 'Debian' else omit }}"
+    loop: "{{ unsupported_firewall_packages }}"
+
+  vars:
+    unsupported_firewall_packages:
+      - nftables
