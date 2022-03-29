@@ -1,0 +1,15 @@
+- name: Test out some boolean values
+  hosts: localhost
+  tasks:
+
+  - debug:
+      msg: "{{ item }}: {{ true if item else false }}"
+    loop:
+      - True
+      - 'True'
+      - "{{ True }}"
+      - "{{ 'True' }}"
+      - False
+      - 'False'
+      - "{{ False }}"
+      - "{{ 'False' }}"
