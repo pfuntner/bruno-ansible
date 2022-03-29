@@ -1,0 +1,12 @@
+- name: Test nested if statements
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - debug:
+      msg:
+        - "{{ item }}: {{ 'one' if item == 1 else ('two' if item == 2 else 'something else') }}"
+    loop:
+      - 1
+      - 2
+      - 3
+      - '1'
