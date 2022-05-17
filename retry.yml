@@ -1,0 +1,25 @@
+- name: Play with task retry attribute
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+  # From https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#retrying-a-task-until-a-condition-is-met :
+  # - name: Retry a task until a certain condition is met
+  #   ansible.builtin.shell: /usr/bin/foo
+  #   register: result
+  #   until: result.stdout.find("all systems go") != -1
+  #   retries: 5
+  #   delay: 10
+
+  - name: Run task
+    command:  ./retry.py --verbose # --attempt "{{ result.attempts }}"
+    # failed_when: false
+    register: result
+    # until: not result.failed
+    # until: not 'foo' in result.stdout
+    until: not 'dpkg-sig' in result.stdout
+    retries: 5
+    delay: 1
+
+  - debug:
+      var: result
