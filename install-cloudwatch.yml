@@ -1,0 +1,52 @@
+- name: Install cloudwatch agent on Amazon Linux 2
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - block:
+      # Install cloudwatch-agent on Amazon Linux
+      # Install cloudwatch agent gpg key
+      - name: Install cloudwatch-agent gpg key
+        rpm_key:
+          key: "https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg"
+          state: present
+  
+      # Download cloudwatch agent rpm
+      - name: Download cloudwatch-agent rpm
+        get_url:
+          url: "https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/{{ (ansible_architecture == 'aarch64') | ternary('arm64', 'amd64') }}/latest/amazon-cloudwatch-agent.rpm"
+          dest: /tmp/amazon-cloudwatch-agent.rpm
+  
+      # Download cloudwatch agent signature
+      - name: Download cloudwatch-agent signature
+        get_url:
+          url: "https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/{{ (ansible_architecture == 'aarch64') | ternary('arm64', 'amd64') }}/latest/amazon-cloudwatch-agent.rpm.sig"
+          dest: /tmp/amazon-cloudwatch-agent.rpm.sig
+  
+      # Validate Cloudwatch agent signature
+      - name: Verify cloudwatch-agent package signature
+        command: gpg --verify cloudwatch-agent.rpm.sig cloudwatch-agent.rpm
+        register: verified_sig
+        failed_when: "'BAD' in verified_sig.stderr"
+        changed_when: false
+        args:
+          chdir: /tmp
+  
+      # Install cloudwatch agent
+      - name: Install cloudwatch-agent rpm
+        yum:
+          name: "/tmp/amazon-cloudwatch-agent.rpm"
+          state: latest
+  
+     # Cleanup Installation Files
+      - name: Cleanup installation files
+        file:
+          path: "{{ item }}"
+          state: absent
+        with_items:
+          - "/tmp/amazon-cloudwatch-agent.rpm"
+          - "/tmp/amazon-cloudwatch-agent.rpm.sig"
+  
+    # end of block - apply sudo to all tasks in file
+    become: yes
+    become_user: root
+    become_method: sudo
