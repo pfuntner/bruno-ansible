@@ -1,0 +1,6 @@
+- name: include vars file
+  include_vars: foo.yml
+
+- debug:
+    msg: 
+      command: "{{ command }}"

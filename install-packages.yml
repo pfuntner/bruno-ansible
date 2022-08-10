@@ -1,0 +1,10 @@
+- name: Install packages
+  hosts: "{{ hosts }}"
+  become: true
+  tasks:
+  - name: Install
+    package:
+      name: "{{ item }}"
+      state: present
+      update_cache: "{{ 'true' if ansible_os_family == 'Debian' else omit }}"
+    loop: "{{ packages }}"

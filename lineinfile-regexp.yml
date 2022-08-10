@@ -1,0 +1,12 @@
+- name: Test regular expression for lineinfile module
+  hosts: localhost
+  tasks:
+
+  - name: Add line to file
+    shell: echo 'module(load="imtcp")' >> /tmp/foobar
+
+  - name: Remove line from file
+    lineinfile:
+      state: absent
+      dest: /tmp/foobar
+      regexp: 'module\(load="imtcp"\)'

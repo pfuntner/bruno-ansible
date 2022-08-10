@@ -1,0 +1,4 @@
+- name: Create template.txt from template
+  template:
+    dest: ./template.txt
+    src: templates/template.j2

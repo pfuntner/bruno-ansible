@@ -1,0 +1,5 @@
+- name: Play with string split() filter
+  hosts: localhost
+  tasks:
+  - debug:
+      msg: "{{ ('abc,xyz' | split (','))[0] }}"

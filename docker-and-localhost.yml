@@ -1,0 +1,44 @@
+- name: Trying tasks against Docker target and localhost
+  hosts: all
+  tasks:
+
+  - name: Print important variables
+    debug:
+      msg:
+        - "ansible_host: {{ ansible_host | default('not defined') }}"
+        - "ansible_user: {{ ansible_user | default('not defined') }}"
+        - "ansible_connection: {{ ansible_connection | default('not defined') }}"
+        - "inventory_hostname: {{ inventory_hostname | default('not defined') }}"
+        - "inventory_dir: {{ inventory_dir | default('not defined') }}"
+        - "inventory_file: {{ inventory_file | default('not defined') }}"
+        - "ansible_ssh_private_key_file: {{ ansible_ssh_private_key_file | default('not defined') }}"
+        - "ansible_python_interpreter: {{ ansible_python_interpreter | default ('not defined') }}"
+        - "discovered_interpreter_python: {{ discovered_interpreter_python | default ('not defined') }}"
+        - "play_hosts: {{ play_hosts | default('not defined') }}"
+        - "ansible_play_hosts_all: {{ ansible_play_hosts_all | default('not defined') }}"
+        - "playbook_dir: {{ playbook_dir | default('not defined') }}"
+        - "role_path: {{ role_path | default('not defined') }}"
+        - "******************************************************************************"
+        - "ansible_os_family: {{ ansible_os_family | default('not defined') }}"
+        - "ansible_distribution: {{ ansible_distribution | default('not defined') }}"
+        - "ansible_distribution_version: {{ ansible_distribution_version | default('not defined') }}"
+        - "******************************************************************************"
+        - "hostvars/inventory ip address: {{ inventory_local_ip_address | default('not defined') }}"
+        - "packer discovered public ip address: {{ packer_public_ip_address | default('not defined') }}"
+        - "target_ip_address: {{ target_ip_address | default('not defined') }}"
+        - "testinfra_ssh_keyfile: {{ testinfra_ssh_keyfile | default('not defined') }}"
+        - "testinfra_connection_backend: {{ testinfra_connection_backend | default ('not defined') }}"
+        - "packer_build_name: {{ packer_build_name | default('not defined') }}"
+        - "packer_builder_type: {{ packer_builder_type | default('not defined') }}"
+
+  - name: Docker task
+    command: uname -a
+    register: uname_output
+
+  - name: Print output from Docker host
+    debug:
+      var: uname_output
+
+  - name: Include localhost task
+    import_tasks: localhost.yml
+    delegate_to: localhost

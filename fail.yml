@@ -1,0 +1,6 @@
+- name: Use fail module
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - fail:
+      msg: Goodbye, cruel world!

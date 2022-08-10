@@ -4,3 +4,4 @@
   - name:
     debug:
       msg: Hello, Ansible world.
+    debugger: always

@@ -1,0 +1,2 @@
+files: '-name one'
+command: "find / {{ files }}" 

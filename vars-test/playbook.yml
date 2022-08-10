@@ -1,0 +1,8 @@
+- name: Try out overriding variables in vars files
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  
+  - name: Include the role
+    include_role:
+      name: foo

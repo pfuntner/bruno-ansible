@@ -1,0 +1,7 @@
+- name: What variables are set without gather facts?
+  hosts: localhost
+  gather_facts: true
+  tasks:
+  - debug:
+      msg:
+        ansible_distribution: "{{ ansible_distribution }}"

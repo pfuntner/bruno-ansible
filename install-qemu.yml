@@ -1,0 +1,13 @@
+- name: Install QEMU packages
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - name: Install packages
+    package:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - qemu
+      - binfmt-support
+      - qemu-user-static
+    become: true

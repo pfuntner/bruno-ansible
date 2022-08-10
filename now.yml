@@ -1,0 +1,7 @@
+- name: Save the current timestamp
+  hosts: localhost
+  tasks:
+
+  - copy:
+      content: "{{ ansible_date_time | to_json }}\n"
+      dest: "/tmp/now.json"

@@ -1,0 +1,20 @@
+- name: Mess with yum
+  hosts: "{{ hosts }}"
+  become: true
+  tasks:
+
+  - name: Clean cache (yum)
+    shell: yum clean all
+
+  - name: Update all current packages
+    package:
+      name: "*"
+      state: latest
+
+  - name: yum makecache
+    command: yum makecache
+
+  - name: Install aide
+    package:
+      name: aide
+      state: present

@@ -1,0 +1,18 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        foo: "{{ foo }} + [ {{ item }} ]"
+      loop:
+        - "one"
+        - "two"
+        - "three"
+      vars:
+        foo: []
+
+    - name: Print the var
+      debug:
+        var: foo

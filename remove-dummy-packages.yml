@@ -1,0 +1,14 @@
+- name: Remove dummy packages
+  hosts: localhost
+  tasks:
+
+  - package:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - foo
+      - bar
+    register: removes
+
+  - debug:
+      var: removes

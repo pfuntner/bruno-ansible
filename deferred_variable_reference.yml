@@ -1,0 +1,12 @@
+- name: Drive deferred_variable_reference role
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "Override `foo` variable"
+      set_fact:
+        foo: after
+      when: override_foo | default(true)
+
+    - name: Include deferred_variable_reference role
+      include_role:
+        name: deferred_variable_reference 

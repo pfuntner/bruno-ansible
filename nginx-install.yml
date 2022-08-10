@@ -1,0 +1,18 @@
+- name: Install NGINX
+  gather_facts: false
+  hosts: all
+
+  # pre_tasks:
+  #   - name: Install Python if not present
+  #     raw: 'apk add --no-cache python3 py3-pip && rm -rf /usr/lib/python*/ensurepip && pip3 install --upgrade pip setuptools && rm -rf /root/.cache'
+
+  tasks:
+    - name: Gather facts
+      setup:
+
+    - name: Running the Official NGINX install role
+      include_role:
+        name: "{{ item }}"
+      loop:
+        - "nginxinc.nginx"
+        - "nginxinc.nginx_config"

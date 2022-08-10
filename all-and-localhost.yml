@@ -1,0 +1,5 @@
+- name: Test running tasks on localhost and multiple target hosts
+  hosts: all
+  tasks:
+
+  - name: What is the 
