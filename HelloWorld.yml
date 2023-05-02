@@ -1,7 +1,11 @@
 - name: Small playbook
   hosts: "{{ hosts }}"
   tasks:
-  - name:
-    debug:
+
+  - debug:
       msg: Hello, Ansible world.
-    debugger: always
+
+  # - name:
+  #   debug:
+  #     msg: Hello, Ansible world.
+  #   debugger: always
