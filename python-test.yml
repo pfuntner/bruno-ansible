@@ -1,0 +1,17 @@
+- name: Python test
+  hosts: all
+  tasks:
+  - name: Run Python script
+    command: "{{ discovered_interpreter_python }}"
+    args:
+      stdin: |
+        import os
+
+        print(f'hello, world from {os.environ["ansible_user"]} (process {os.getpid()})')
+    environment:
+      ansible_user: "{{ ansible_user }}"
+    register: runner
+
+  - name: Dump output
+    debug:
+      msg: "{{ runner.stdout_lines }}"
