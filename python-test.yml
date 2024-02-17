@@ -1,6 +1,10 @@
 - name: Python test
   hosts: all
   tasks:
+
+  - debug:
+      msg: "Run Python script with {{ discovered_interpreter_python }} for {{ ansible_user }}"
+
   - name: Run Python script
     command: "{{ discovered_interpreter_python }}"
     args:
