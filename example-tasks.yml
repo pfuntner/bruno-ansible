@@ -1,0 +1,40 @@
+- name: Small playbook
+  hosts: "{{ hosts }}"
+  tasks:
+
+  - name: Hello
+    debug:
+      msg: Hello, Ansible world.
+
+  - name: Skip example
+    debug:
+      msg: Don't run me
+    when: false
+
+  - name: Force handler
+    command: 'true'
+    notify: Good riddance
+
+  - name: Force failing handler
+    command: 'true'
+    notify: Self destruct
+
+  - name: Wait
+    wait_for:
+      timeout: 5
+
+  - name: Bye
+    debug:
+      msg: "{{ item }}"
+    loop:
+      - Good
+      - Bye
+
+  handlers:
+  - name: Good riddance
+    debug:
+      msg: I'm OUTTA here!
+
+  - name: Self destruct
+    fail:
+      msg: "Bruhahahahahaha"
